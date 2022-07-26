@@ -34,13 +34,55 @@
                     style="height: 150px; resize: none"></textarea>
                 <label for="floatingTextarea2" class="text-secondary">Note Details</label>
             </div>
-            <!-- Add button -->
-            <div class="buttons">
-                <button type="button" class="btn btn-primary fw-bold w-25">Add</button>
-                <button type="button" class="btn btn-danger fw-bold w-25">Reset</button>
+            <!-- Lower Area -->
+            <div class="lower-area d-flex justify-content-between">
+                <!-- DropdDown Menu -->
+                <div class="dropdown">
+                    <!-- Category Button -->
+                    <a class="btn btn-secondary dropdown-toggle" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">Category</a>
+                    <!-- Menu -->
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">General</a></li>
+                        <li><a class="dropdown-item" href="#">Frontend</a></li>
+                        <li><a class="dropdown-item" href="#">Backend</a></li>
+                        <li><a class="dropdown-item" href="#">Quick Notes</a></li>
+                        <hr>
+                        <!-- New Category Button -->
+                        <li><a class="dropdown-item" href="#newCategory" data-bs-toggle="modal"
+                                data-bs-target="#newCategory" role="button">+ Add new category</a></li>
+                    </ul>
+                </div>
+                <!-- Add & Reset button -->
+                <div class="buttons btn-group w-50">
+                    <button type="button" class="btn btn-primary fw-bold w-25">Add</button>
+                    <button type="button" class="btn btn-danger fw-bold w-25">Reset</button>
+                </div>
             </div>
         </div>
     </section>
+    <!-- Modal-->
+    <div class="modal fade" tabindex="-1" id="newCategory">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add new category</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating">
+                        <input type="text" class="form-control border-secondary" id="categoryName"
+                            placeholder="Enter Category Name">
+                        <label for="floatingInput" class="text-secondary">Category Name</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Notes Section -->
     <section class="notes mt-4">
         <div class="container">
