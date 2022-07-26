@@ -84,10 +84,22 @@
         </div>
     </div>
     <!-- Notes Section -->
-    <section class="notes mt-4">
+    <section class="notes-area mt-4">
         <div class="container">
             <!-- Heading -->
-            <h2 class="text-primary pb-2  mb-4 fw-bold border-bottom border-2">Notes:</h2>
+            <div class="notes-heading d-flex justify-content-between border-bottom border-2 mb-4">
+                <h2 class="text-primary pb-2 fw-bold d-inline">Notes:</h2>
+                <div class="dropdown d-inline">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">All</button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">All</a></li>
+                        <li><a class="dropdown-item" href="#">General</a></li>
+                        <li><a class="dropdown-item" href="#">Frontend</a></li>
+                        <li><a class="dropdown-item" href="#">Backend</a></li>
+                    </ul>
+                </div>
+            </div>
             <!-- Note Box -->
             <div class="card text-start mb-3">
                 <div class="card-header fw-bold fs-5">Note 1 : Javascript Browser Object Model</div>
@@ -99,7 +111,10 @@
                     <button type="button" class="btn btn-primary">Edit</button>
                     <button type="button" class="btn btn-danger">Delete</button>
                 </div>
-                <div class="card-footer text-muted">2 days ago</div>
+                <div class="card-footer text-muted d-flex justify-content-between">
+                    <span>2 days ago</span>
+                    <span>Category: General</span>
+                </div>
             </div>
         </div>
     </section>
