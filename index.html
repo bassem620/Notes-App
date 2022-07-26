@@ -13,12 +13,13 @@
 <body>
     <!-- NavBar -->
     <nav class="navbar bg-light shadow fixed-top">
-        <div class="container">
-            <span class="navbar-brand mb-0 h1 text-primary mx-auto fw-bold">Notes</span>
+        <div class="container position-relative">
+            <span class="navbar-brand mb-0 h1 text-primary mx-sm-auto fw-bold">Notes</span>
+            <button type="button" class="btn btn-primary fw-bold position-absolute end-0 me-2">Add Note</button>
         </div>
     </nav>
     <!-- Add Section -->
-    <section class="add mx-2">
+    <section class="add mx-2 mb-4 d-block">
         <div class="container py-2 px-4 shadow rounded-3">
             <!-- Heading -->
             <h1 class="text-primary fw bold fs-1 mb-3">Add New Note</h1>
@@ -37,6 +38,26 @@
             <div class="buttons">
                 <button type="button" class="btn btn-primary fw-bold w-25">Add</button>
                 <button type="button" class="btn btn-danger fw-bold w-25">Reset</button>
+            </div>
+        </div>
+    </section>
+    <!-- Notes Section -->
+    <section class="notes mt-4">
+        <div class="container">
+            <!-- Heading -->
+            <h2 class="text-primary pb-2  mb-4 fw-bold border-bottom border-2">Notes:</h2>
+            <!-- Note Box -->
+            <div class="card text-start mb-3">
+                <div class="card-header fw-bold fs-5">Note 1 : Javascript Browser Object Model</div>
+                <div class="card-body">
+                    <p class="card-text fs-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti aperiam
+                        enim eos similique, adipisci laboriosam atque eveniet, quaerat harum explicabo veritatis.
+                        Asperiores, voluptate consequatur vitae commodi dolorem ipsam maiores suscipit.
+                    </p>
+                    <button type="button" class="btn btn-primary">Edit</button>
+                    <button type="button" class="btn btn-danger">Delete</button>
+                </div>
+                <div class="card-footer text-muted">2 days ago</div>
             </div>
         </div>
     </section>
