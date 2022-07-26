@@ -15,22 +15,23 @@
     <nav class="navbar bg-light shadow fixed-top">
         <div class="container position-relative">
             <span class="navbar-brand mb-0 h1 text-primary mx-sm-auto fw-bold">Notes</span>
-            <button type="button" class="btn btn-primary fw-bold position-absolute end-0 me-2">Add Note</button>
+            <button type="button" class="btn btn-primary fw-bold position-absolute end-0 me-2" id="showAddNoteBtn">Add
+                Note</button>
         </div>
     </nav>
     <!-- Add Section -->
-    <section class="add mx-2 mb-4 d-block">
+    <section class="add-area mx-2 mb-4 d-none">
         <div class="container py-2 px-4 shadow rounded-3">
             <!-- Heading -->
             <h1 class="text-primary fw bold fs-1 mb-3">Add New Note</h1>
             <!-- Note Title TextBox -->
             <div class="form-floating mb-3">
-                <input type="text" class="form-control border-secondary" id="noteTitle" placeholder="Note Title">
+                <input type="text" class="form-control border-secondary" id="noteTitleBox" placeholder="Note Title">
                 <label for="floatingInput" class="text-secondary">Note Title</label>
             </div>
             <!-- Note Details TextBox -->
             <div class="form-floating mb-3">
-                <textarea class="form-control border-secondary" placeholder="Note Details" id="noteDetails"
+                <textarea class="form-control border-secondary" placeholder="Note Details" id="noteDetailsBox"
                     style="height: 150px; resize: none"></textarea>
                 <label for="floatingTextarea2" class="text-secondary">Note Details</label>
             </div>
@@ -39,24 +40,24 @@
                 <!-- DropdDown Menu -->
                 <div class="dropdown">
                     <!-- Category Button -->
-                    <a class="btn btn-secondary dropdown-toggle" role="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">Category</a>
+                    <a class="btn btn-success dropdown-toggle" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false" id="categoryBtn">Category</a>
                     <!-- Menu -->
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">General</a></li>
-                        <li><a class="dropdown-item" href="#">Frontend</a></li>
-                        <li><a class="dropdown-item" href="#">Backend</a></li>
-                        <li><a class="dropdown-item" href="#">Quick Notes</a></li>
+                    <ul class="dropdown-menu categories">
+                        <li><a class="dropdown-item category">General</a></li>
                         <hr>
                         <!-- New Category Button -->
-                        <li><a class="dropdown-item" href="#newCategory" data-bs-toggle="modal"
-                                data-bs-target="#newCategory" role="button">+ Add new category</a></li>
+                        <li>
+                            <a class="dropdown-item" href="#newCategory" data-bs-toggle="modal"
+                                data-bs-target="#newCategory" role="button">+ Add new category</a>
+                        </li>
                     </ul>
                 </div>
                 <!-- Add & Reset button -->
                 <div class="buttons btn-group w-50">
-                    <button type="button" class="btn btn-primary fw-bold w-25">Add</button>
-                    <button type="button" class="btn btn-danger fw-bold w-25">Reset</button>
+                    <button type="button" class="btn btn-primary fw-bold w-25" id="addNoteBtn">Add</button>
+                    <button type="button" class="btn btn-danger fw-bold w-25" id="resetBtn">Reset</button>
+                    <button type="button" class="btn btn-secondary fw-bold w-25" id="noteCancel">Cancel</button>
                 </div>
             </div>
         </div>
@@ -71,14 +72,14 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-floating">
-                        <input type="text" class="form-control border-secondary" id="categoryName"
+                        <input type="text" class="form-control border-secondary" id="newCategoryName"
                             placeholder="Enter Category Name">
                         <label for="floatingInput" class="text-secondary">Category Name</label>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary">Add</button>
+                    <button type="button" class="btn btn-primary" id="addCategoryNameBtn">Add</button>
                 </div>
             </div>
         </div>
@@ -90,33 +91,17 @@
             <div class="notes-heading d-flex justify-content-between border-bottom border-2 mb-4">
                 <h2 class="text-primary pb-2 fw-bold d-inline">Notes:</h2>
                 <div class="dropdown d-inline">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">All</button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">All</a></li>
-                        <li><a class="dropdown-item" href="#">General</a></li>
-                        <li><a class="dropdown-item" href="#">Frontend</a></li>
-                        <li><a class="dropdown-item" href="#">Backend</a></li>
+                    <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false" id="categoryViewBtn">All</button>
+                    <ul class="dropdown-menu categoriesView">
+                        <li><a class="dropdown-item categoryView">All</a></li>
+                        <li><a class="dropdown-item categoryView">General</a></li>
                     </ul>
                 </div>
             </div>
-            <!-- Note Box -->
-            <div class="card text-start mb-3">
-                <div class="card-header fw-bold fs-5">Note 1 : Javascript Browser Object Model</div>
-                <div class="card-body">
-                    <p class="card-text fs-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti aperiam
-                        enim eos similique, adipisci laboriosam atque eveniet, quaerat harum explicabo veritatis.
-                        Asperiores, voluptate consequatur vitae commodi dolorem ipsam maiores suscipit.
-                    </p>
-                    <button type="button" class="btn btn-primary">Edit</button>
-                    <button type="button" class="btn btn-danger">Delete</button>
-                </div>
-                <div class="card-footer text-muted d-flex justify-content-between">
-                    <span>2 days ago</span>
-                    <span>Category: General</span>
-                </div>
-            </div>
         </div>
+        <!-- Notes Container -->
+        <div class="notes-boxes container"></div>
     </section>
     <!-- JavaScript -->
     <script src="main.js"></script>
