@@ -191,12 +191,17 @@ function editSave(index){
     let editModalTitle = document.getElementById("editModalTitle");
     editModalTitle.innerHTML=`Edit Note ${index+1}`;
     let notes = localStorage.getItem("notes");
-    notesObj = JSON.parse(notes);
-    notesObj[index].title = noteEditTitleBox.value;
-    notesObj[index].details = noteEditDetailsBox.value;
-    notesObj[index].updated = `Updated : ${setTime()}`;
-    localStorage.setItem("notes",JSON.stringify(notesObj));
-    getNotes();
+    if((noteEditTitleBox.value == '')||(noteEditDetailsBox.value == '')){
+        alertBtn.click();
+    }
+    else{
+        notesObj = JSON.parse(notes);
+        notesObj[index].title = noteEditTitleBox.value;
+        notesObj[index].details = noteEditDetailsBox.value;
+        notesObj[index].updated = `Updated : ${setTime()}`;
+        localStorage.setItem("notes",JSON.stringify(notesObj));
+        getNotes();
+    }
 }
 
 // SetTime
