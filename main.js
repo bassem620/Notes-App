@@ -6,12 +6,13 @@ let resetBtn = document.getElementById("resetBtn");
 let noteTitleBox = document.getElementById("noteTitleBox"); 
 let noteDetailsBox = document.getElementById("noteDetailsBox"); 
 let categoryBtn = document.getElementById("categoryBtn");
+let categoriesContainer = document.querySelector(".add-area .categories");
 let categories = document.querySelectorAll(".add-area .categories .category");
+let addCategoryBtn = document.getElementById("addCategoryBtn");
 let categoryViewBtn = document.getElementById("categoryViewBtn");
 let categoriesView = document.querySelector(".notes-area .categoriesView");
 let categoryView = document.querySelectorAll(".notes-area .categoryView");
 let newCategoryNameBox = document.getElementById("newCategoryName");
-let addCategoryNameBtn = document.getElementById("addCategoryNameBtn");
 let addNoteBtn = document.getElementById("addNoteBtn");
 let notesContainer = document.querySelector(".notes-boxes");
 let noteEditTitleBox = document.getElementById("noteEditTitleBox");
@@ -56,12 +57,6 @@ allCategoriesView.forEach((categ)=>{
         categoryViewBtn.innerHTML = categ.innerHTML;
     });
 });
-
-//Create New Category
-addCategoryNameBtn.onclick = function (){
-    //add new category name to localStorage
-    newCategoryNameBox.value='';
-}
 
 //Add note button 
 addNoteBtn.addEventListener("click",(e)=>{
@@ -198,3 +193,54 @@ function setTime(){
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     return `${time.getDate()} ${monthNames[time.getMonth()]} ${time.getFullYear()}  ${time.getHours()<10 ? `0${time.getHours()}` : time.getHours()}:${time.getMinutes()<10 ? `0${time.getMinutes()}` : time.getMinutes()}`;
 }
+
+//Categories names
+function categoriesNames(){
+    categoriesContainer.innerHTML='';
+    categoriesContainer.prepend(categoryNameCreateElement("General"));
+    catNames = localStorage.getItem("notes_categories");
+    if(catNames !== null){
+        catsObj = JSON.parse(catNames);
+        for(let i=0 ; i<catsObj.length ; i++){
+            categoriesContainer.prepend(categoryNameCreateElement(catsObj[i]));
+        }
+    }
+    let hr = document.createElement("hr");
+    let li = document.createElement("li");
+    let a = document.createElement("a");
+    a.className="dropdown-item";
+    a.role = "button";
+    a.setAttribute("data-bs-toggle","modal");
+    a.setAttribute("data-bs-target","#newCategory");
+    a.innerHTML = "+ Add New Category";
+    li.append(a);
+    categoriesContainer.append(hr);
+    categoriesContainer.append(li);
+}
+categoriesNames();
+
+function categoryNameCreateElement(name){
+    let a = document.createElement("a");
+    a.className="dropdown-item category";
+    a.innerHTML = name
+    let li = document.createElement("li");
+    li.appendChild(a);
+    return li ;
+}
+
+addCategoryBtn.addEventListener("click",()=>{
+    if(newCategoryNameBox.value !== ''){
+        catnames = localStorage.getItem("notes_categories");
+        if(catnames == null){
+            names = [];
+            names.push(newCategoryNameBox.value);
+            localStorage.setItem("notes_categories",JSON.stringify(names));
+        }
+        else{
+            catsObj = JSON.parse(catnames);
+            catsObj.push(newCategoryNameBox.value);
+            localStorage.setItem("notes_categories",JSON.stringify(catnames));
+        }
+    }   
+    categoriesNames();
+});
