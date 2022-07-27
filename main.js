@@ -41,31 +41,34 @@ resetBtn.onclick = function(){
 }
 
 //Add note button 
-addNoteBtn.addEventListener("click",(e)=>{
+addNoteBtn.addEventListener("click",()=>{
     if(noteTitleBox.value=="" || noteDetailsBox.value==""){
-        return alert("Please add note title and details.");
+        let alertBtn = document.getElementById("alertBtn");
+        alertBtn.click();
     }
-    let notes = localStorage.getItem("notes");
-    if(notes == null)
-    {
-        notesObj = []
+    else{
+        let notes = localStorage.getItem("notes");
+        if(notes == null)
+        {
+            notesObj = []
+        }
+        else
+        {
+            notesObj = JSON.parse(notes);
+        }
+        let myObj = {
+            title : noteTitleBox.value,
+            details : noteDetailsBox.value,
+            category : categoryBtn.innerHTML=="Category" ? "General" : categoryBtn.innerHTML,
+            time : `Created : ${setTime()}` ,
+            updated : null,
+            archived : false,
+        }
+        notesObj.push(myObj);
+        localStorage.setItem("notes" , JSON.stringify(notesObj));
+        resetBtn.click();
+        getNotes();
     }
-    else
-    {
-        notesObj = JSON.parse(notes);
-    }
-    let myObj = {
-        title : noteTitleBox.value,
-        details : noteDetailsBox.value,
-        category : categoryBtn.innerHTML=="Category" ? "General" : categoryBtn.innerHTML,
-        time : `Created : ${setTime()}` ,
-        updated : null,
-        archived : false,
-    }
-    notesObj.push(myObj);
-    localStorage.setItem("notes" , JSON.stringify(notesObj));
-    resetBtn.click();
-    getNotes();
 })
 
 
