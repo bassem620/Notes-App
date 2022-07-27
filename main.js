@@ -150,7 +150,6 @@ function getNotes(){
         deleteBtnsArray.forEach((ele,index)=>{
             ele.addEventListener("click",()=>{
                 deleteConfirmed.onclick = function () {
-                    console.log(index);
                     let notes = localStorage.getItem("notes");
                     notesObj = JSON.parse(notes);
                     notesObj.splice(index,1);
@@ -173,22 +172,22 @@ function getNotes(){
                 })
             }
         );
-                // Archive Button
-                let archivebtns = document.querySelectorAll(".archiveBtn");
-                let archivebtnsArray = Array.from(archivebtns);
-                archivebtnsArray.forEach((ele,ind) => {
-                    ele.addEventListener("click",()=>{
-                        notesObj[ind].archived ? notesObj[ind].archived= false : notesObj[ind].archived = true;
-                        localStorage.setItem("notes",JSON.stringify(notesObj));
-                        getNotes();
-                    })
-                });
-    }//Else End
-    if(notesContainer.children.length == 0){
+        // Archive Button
+        let archivebtns = document.querySelectorAll(".archiveBtn");
+        let archivebtnsArray = Array.from(archivebtns);
+        archivebtnsArray.forEach((ele,ind) => {
+            ele.addEventListener("click",()=>{
+                notesObj[ind].archived ? notesObj[ind].archived= false : notesObj[ind].archived = true;
+                localStorage.setItem("notes",JSON.stringify(notesObj));
+                getNotes();
+            })
+        });
+    }
+    if(notesContainer.innerHTML==`No Notes Found<i class="bi bi-journal-x ps-2"></i>`){
         addArea.classList.remove("d-none");
         addArea.classList.add("d-block");
     }
-}//getNotes End
+}
 
 // Edit save function
 function editSave(index){
@@ -215,15 +214,30 @@ function setTime(){
     return `${time.getDate()} ${monthNames[time.getMonth()]} ${time.getFullYear()}  ${time.getHours()<10 ? `0${time.getHours()}` : time.getHours()}:${time.getMinutes()<10 ? `0${time.getMinutes()}` : time.getMinutes()}`;
 }
 
-//Categories names
+// Category item Creation
+function categoryNameCreateElement(name){
+    let a = document.createElement("a");
+    a.className="dropdown-item category";
+    if(name !== "Archived"){
+        a.innerHTML = `<i class="bi bi-bookmark pe-2"></i>${name}`
+    }
+    else{
+        a.innerHTML = `<i class="bi bi-archive pe-2"></i>${name}`
+    }
+    let li = document.createElement("li");
+    li.appendChild(a);
+    return li ;
+}
+
+// Categories Menu Creation
 function categoriesNames(){
-    categoriesContainer.innerHTML='';
+    categoriesContainer.innerHTML="";
     categoriesContainer.appendChild(categoryNameCreateElement("General"));
-    catNames = localStorage.getItem("notes_categories");
+    let catNames = localStorage.getItem("notes_categories");
     if(catNames !== null){
-        catsObj = JSON.parse(catNames);
-        for(let i=0 ; i<catsObj.length ; i++){
-            categoriesContainer.appendChild(categoryNameCreateElement(catsObj[i]));
+        let catNamesObj = JSON.parse(catNames);
+        for(let i=0 ; i<catNamesObj.length ; i++){
+            categoriesContainer.appendChild(categoryNameCreateElement(catNamesObj[i]));
         }
     }
     let hr = document.createElement("hr");
@@ -236,36 +250,31 @@ function categoriesNames(){
     a.innerHTML = `<i class="bi bi-plus-circle pe-2"></i>Add New Category`;
     li.append(a);
     categoriesContainer.append(hr);
-    categoriesContainer.appendChild(categoryNameCreateElement(`<i class="bi bi-archive pe-2"></i>Archived`));
+    categoriesContainer.appendChild(categoryNameCreateElement('Archived'));
     categoriesContainer.append(li);
 }
 categoriesNames();
 
-function categoryNameCreateElement(name){
-    let a = document.createElement("a");
-    a.className="dropdown-item category";
-    a.innerHTML = `<i class="bi bi-bookmark pe-2"></i>${name}`
-    let li = document.createElement("li");
-    li.appendChild(a);
-    return li ;
-}
-
-addCategoryBtn.addEventListener("click",()=>{
-    if(newCategoryNameBox.value !== ''){
-        catnames = localStorage.getItem("notes_categories");
-        if(catnames == null){
-            names = [];
-            names.push(newCategoryNameBox.value);
-            localStorage.setItem("notes_categories",JSON.stringify(names));
+// Add category Button
+addCategoryBtn.onclick = function (){
+    if(newCategoryNameBox.value !== ""){
+        let getCats = localStorage.getItem("notes_categories");
+        if(getCats === null){
+            getCats = [];
+            getCats.push(newCategoryNameBox.value.toString());
+            localStorage.setItem("notes_categories",JSON.stringify(getCats));
         }
         else{
-            catsObj = JSON.parse(catnames);
-            catsObj.push(newCategoryNameBox.value);
-            localStorage.setItem("notes_categories",JSON.stringify(catnames));
+            let cats = JSON.parse(getCats);
+            if(!cats.includes(newCategoryNameBox.value)){
+                cats.push(newCategoryNameBox.value);
+                localStorage.setItem("notes_categories",JSON.stringify(cats));
+            }
         }
-    }   
+        newCategoryNameBox.value="";
+    }
     categoriesNames();
-});
+}
 
 //category Selection
 let categories = document.querySelectorAll(".add-area .categories .category");
