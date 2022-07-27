@@ -59,6 +59,8 @@ addNoteBtn.addEventListener("click",(e)=>{
         details : noteDetailsBox.value,
         category : categoryBtn.innerHTML=="Category" ? "General" : categoryBtn.innerHTML,
         time : `Created : ${setTime()}` ,
+        updated : null,
+        archived : false,
     }
     notesObj.push(myObj);
     localStorage.setItem("notes" , JSON.stringify(notesObj));
@@ -106,9 +108,13 @@ function getNotes(){
             deleteBtn.type="button";
             deleteBtn.className="btn btn-danger deleteButton ms-1";
             deleteBtn.innerHTML="Delete";
+            let archiveBtn = document.createElement("button");
+            archiveBtn.className = "btn btn-secondary archiveBtn ms-1";
+            archiveBtn.innerHTML = notesObj[i].archived ? "Archive" : "Unarchive";
             body.appendChild(bodyText);
             body.appendChild(editBtn);
             body.appendChild(deleteBtn);
+            body.appendChild(archiveBtn);
             // Footer
             let footer = document.createElement("div");
             footer.className="card-footer text-muted d-flex flex-column flex-sm-row justify-content-between";
@@ -117,7 +123,7 @@ function getNotes(){
             let categorySpan = document.createElement("span");
             categorySpan.innerHTML=`Category : ${notesObj[i].category}`;
             footer.appendChild(timeSpan);
-            if(notesObj[i].updated !== undefined){
+            if(notesObj[i].updated !== null){
                 let updatedSpan = document.createElement("span");
                 updatedSpan.innerHTML = notesObj[i].updated;
                 footer.appendChild(updatedSpan);
@@ -155,11 +161,21 @@ function getNotes(){
                     noteEditTitleBox.value = notesObj[ind].title;
                     noteEditDetailsBox.value = notesObj[ind].details;
                     editSaveBtn.addEventListener("click",()=>{
-                        editSave(ind);
+                    editSave(ind);
                     })
                 })
             }
         );
+                // Archive Button
+                let archivebtns = document.querySelectorAll(".archiveBtn");
+                let archivebtnsArray = Array.from(archivebtns);
+                archivebtnsArray.forEach((ele,ind) => {
+                    ele.addEventListener("click",()=>{
+                        notesObj[ind].archived ? notesObj[ind].archived= false : notesObj[ind].archived = true;
+                        localStorage.setItem("notes",JSON.stringify(notesObj));
+                        getNotes();
+                    })
+                });
     }//Else End
     if(notesContainer.children.length == 0){
         addArea.classList.remove("d-none");
@@ -190,12 +206,12 @@ function setTime(){
 //Categories names
 function categoriesNames(){
     categoriesContainer.innerHTML='';
-    categoriesContainer.prepend(categoryNameCreateElement("General"));
+    categoriesContainer.appendChild(categoryNameCreateElement("General"));
     catNames = localStorage.getItem("notes_categories");
     if(catNames !== null){
         catsObj = JSON.parse(catNames);
         for(let i=0 ; i<catsObj.length ; i++){
-            categoriesContainer.prepend(categoryNameCreateElement(catsObj[i]));
+            categoriesContainer.appendChild(categoryNameCreateElement(catsObj[i]));
         }
     }
     let hr = document.createElement("hr");
@@ -208,6 +224,7 @@ function categoriesNames(){
     a.innerHTML = "+ Add New Category";
     li.append(a);
     categoriesContainer.append(hr);
+    categoriesContainer.appendChild(categoryNameCreateElement("Archived"));
     categoriesContainer.append(li);
 }
 categoriesNames();
