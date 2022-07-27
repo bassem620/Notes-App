@@ -110,6 +110,8 @@ function getNotes(){
             let deleteBtn = document.createElement("button");
             deleteBtn.type="button";
             deleteBtn.className="btn btn-danger deleteButton ms-1";
+            deleteBtn.setAttribute("data-bs-toggle","modal");
+            deleteBtn.setAttribute("data-bs-target","#deleteConf");
             deleteBtn.innerHTML=`<i class="bi bi-trash3-fill pe-1"></i>Delete`;
             let archiveBtn = document.createElement("button");
             archiveBtn.className = "btn btn-secondary archiveBtn ms-1";
@@ -144,17 +146,19 @@ function getNotes(){
         //Delete Button
         let deleteBtns = document.querySelectorAll(".deleteButton");
         let deleteBtnsArray = Array.from(deleteBtns);
+        let deleteConfirmed = document.getElementById("deleteConfirmed");
         deleteBtnsArray.forEach((ele,index)=>{
             ele.addEventListener("click",()=>{
-                let notes = localStorage.getItem("notes");
-                notesObj = JSON.parse(notes);
-                notesObj.splice(index,1);
-                localStorage.setItem("notes",JSON.stringify(notesObj));
-                getNotes();
-                }//addEventListener inner function End
-            )//addEventListener End
-        }//Foreach inner function End
-        );//Foreach End
+                deleteConfirmed.onclick = function () {
+                    console.log(index);
+                    let notes = localStorage.getItem("notes");
+                    notesObj = JSON.parse(notes);
+                    notesObj.splice(index,1);
+                    localStorage.setItem("notes",JSON.stringify(notesObj));
+                    getNotes();
+                }
+                }
+        )});
         // Edit Button
         let editBtns = document.querySelectorAll(".editButton");
         let editSaveBtn = document.getElementById("editSaveBtn");
