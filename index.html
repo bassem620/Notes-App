@@ -20,7 +20,7 @@
         </div>
     </nav>
     <!-- Add Section -->
-    <section class="add-area mx-2 mb-4 d-none">
+    <section class="add-area mx-2 mb-4 d-block">
         <div class="container py-2 px-4 shadow rounded-3">
             <!-- Heading -->
             <h1 class="text-primary fw bold fs-1 mb-3">Add New Note</h1>
@@ -36,7 +36,7 @@
                 <label for="floatingTextarea2" class="text-secondary">Note Details</label>
             </div>
             <!-- Lower Area -->
-            <div class="lower-area d-flex justify-content-between">
+            <div class="lower-area d-flex justify-content-between flex-wrap flex-sm-nowrap">
                 <!-- DropdDown Menu -->
                 <div class="dropdown">
                     <!-- Category Button -->
@@ -46,7 +46,7 @@
                     <ul class="dropdown-menu categories"></ul>
                 </div>
                 <!-- Add & Reset button -->
-                <div class="buttons btn-group w-50">
+                <div class="buttons btn-group buttons-group mt-2 mt-sm-0">
                     <button type="button" class="btn btn-primary fw-bold w-25" id="addNoteBtn">Add</button>
                     <button type="button" class="btn btn-danger fw-bold w-25" id="resetBtn">Reset</button>
                     <button type="button" class="btn btn-secondary fw-bold w-25" id="noteCancel">Cancel</button>
