@@ -155,6 +155,10 @@ function getNotes(){
             }
         );
     }//Else End
+    if(notesContainer.children.length == 0){
+        addArea.classList.remove("d-none");
+        addArea.classList.add("d-block");
+    }
 }//getNotes End
 
 // Edit save function
