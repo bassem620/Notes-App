@@ -14,9 +14,8 @@ let newCategoryNameBox = document.getElementById("newCategoryName");
 let addCategoryNameBtn = document.getElementById("addCategoryNameBtn");
 let addNoteBtn = document.getElementById("addNoteBtn");
 let notesContainer = document.querySelector(".notes-boxes");
-let deleteBtns = document.querySelectorAll(".notes-boxes .deleteButton");
-let editBtns = document.querySelectorAll(".editButton");
-console.log(editBtns);
+let noteEditTitleBox = document.getElementById("noteEditTitleBox");
+let noteEditDetailsBox = document.getElementById("noteEditDetailsBox");
 
 getNotes();
 
@@ -103,6 +102,10 @@ function getNotes(){
     else{
         notesContainer.className="notes-boxes container";
         notesObj = JSON.parse(notes);
+        if(notesObj.length==0){
+            notesContainer.innerHTML='No Notes Found';
+            notesContainer.className="lext-lead text-muted text-center m-5 fs-5 fw-bold";
+        }
         for(let i=0 ; i<notesObj.length; i++){
             // Header
             let header = document.createElement("div");
@@ -120,6 +123,8 @@ function getNotes(){
             editBtn.type="button";
             editBtn.className="btn btn-primary editButton";
             editBtn.innerHTML="Edit";
+            editBtn.setAttribute("data-bs-toggle","modal");
+            editBtn.setAttribute("data-bs-target","#editModal");
             let deleteBtn = document.createElement("button");
             deleteBtn.type="button";
             deleteBtn.className="btn btn-danger deleteButton ms-1";
@@ -144,7 +149,47 @@ function getNotes(){
             card.appendChild(footer);
             notesContainer.appendChild(card);
         }
-    }
+        //Delete Button
+        let deleteBtns = document.querySelectorAll(".deleteButton");
+        let deleteBtnsArray = Array.from(deleteBtns);
+        deleteBtnsArray.forEach((ele,index)=>{
+            ele.addEventListener("click",()=>{
+                let notes = localStorage.getItem("notes");
+                notesObj = JSON.parse(notes);
+                notesObj.splice(index,1);
+                localStorage.setItem("notes",JSON.stringify(notesObj));
+                getNotes();
+                }//addEventListener inner function End
+            )//addEventListener End
+        }//Foreach inner function End
+        );//Foreach End
+        // Edit Button
+        let editBtns = document.querySelectorAll(".editButton");
+        let editSaveBtn = document.getElementById("editSaveBtn");
+        let editBtnsArray = Array.from(editBtns);
+        editBtnsArray.forEach((ele,ind) => {
+                ele.addEventListener("click",() => {
+                    noteEditTitleBox.value = notesObj[ind].title;
+                    noteEditDetailsBox.value = notesObj[ind].details;
+                    editSaveBtn.addEventListener("click",()=>{
+                        editSave(ind);
+                    })
+                })
+            }
+        );
+    }//Else End
+}//getNotes End
+
+// Edit save function
+function editSave(index){
+    let editModalTitle = document.getElementById("editModalTitle");
+    editModalTitle.innerHTML=`Edit Note ${index+1}`;
+    let notes = localStorage.getItem("notes");
+    notesObj = JSON.parse(notes);
+    notesObj[index].title = noteEditTitleBox.value;
+    notesObj[index].details = noteEditDetailsBox.value;
+    localStorage.setItem("notes",JSON.stringify(notesObj));
+    getNotes();
 }
 
 // SetTime
@@ -153,13 +198,3 @@ function setTime(){
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     return `${time.getDate()} ${monthNames[time.getMonth()]} ${time.getFullYear()}  ${time.getHours()<10 ? `0${time.getHours()}` : time.getHours()}:${time.getMinutes()<10 ? `0${time.getMinutes()}` : time.getMinutes()}`;
 }
-
-//Delete function
-function deleteNote(index){
-    let notes = localStorage.getItem("notes");
-    notesObj = JSON.parse(notes);
-    notesObj.splice(index,1);
-    localStorage.setItem("notes",JSON.stringify(notesObj));
-    getNotes();
-}
-
