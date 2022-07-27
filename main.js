@@ -7,11 +7,9 @@ let noteTitleBox = document.getElementById("noteTitleBox");
 let noteDetailsBox = document.getElementById("noteDetailsBox"); 
 let categoryBtn = document.getElementById("categoryBtn");
 let categoriesContainer = document.querySelector(".add-area .categories");
-let categories = document.querySelectorAll(".add-area .categories .category");
 let addCategoryBtn = document.getElementById("addCategoryBtn");
 let categoryViewBtn = document.getElementById("categoryViewBtn");
 let categoriesView = document.querySelector(".notes-area .categoriesView");
-let categoryView = document.querySelectorAll(".notes-area .categoryView");
 let newCategoryNameBox = document.getElementById("newCategoryName");
 let addNoteBtn = document.getElementById("addNoteBtn");
 let notesContainer = document.querySelector(".notes-boxes");
@@ -41,22 +39,6 @@ resetBtn.onclick = function(){
     noteDetailsBox.value = '';
     categoryBtn.innerHTML = 'Category';
 }
-
-//category Selection
-let allCategories = Array.from(categories);
-allCategories.forEach((categ)=>{
-    categ.addEventListener("click",()=>{
-        categoryBtn.innerHTML = categ.innerHTML;
-    });
-});
-
-//Category View Selection
-let allCategoriesView = Array.from(categoryView);
-allCategoriesView.forEach((categ)=>{
-    categ.addEventListener("click",()=>{
-        categoryViewBtn.innerHTML = categ.innerHTML;
-    });
-});
 
 //Add note button 
 addNoteBtn.addEventListener("click",(e)=>{
@@ -243,4 +225,22 @@ addCategoryBtn.addEventListener("click",()=>{
         }
     }   
     categoriesNames();
+});
+
+//category Selection
+let categories = document.querySelectorAll(".add-area .categories .category");
+let allCategories = Array.from(categories);
+allCategories.forEach((categ)=>{
+    categ.addEventListener("click",()=>{
+        categoryBtn.innerHTML = categ.innerHTML;
+    });
+});
+
+//Category View Selection
+let categoryView = document.querySelectorAll(".notes-area .categoryView");
+let allCategoriesView = Array.from(categoryView);
+allCategoriesView.forEach((categ)=>{
+    categ.addEventListener("click",()=>{
+        categoryViewBtn.innerHTML = categ.innerHTML;
+    });
 });
