@@ -14,7 +14,9 @@ let newCategoryNameBox = document.getElementById("newCategoryName");
 let addCategoryNameBtn = document.getElementById("addCategoryNameBtn");
 let addNoteBtn = document.getElementById("addNoteBtn");
 let notesContainer = document.querySelector(".notes-boxes");
-
+let deleteBtns = document.querySelectorAll(".notes-boxes .deleteButton");
+let editBtns = document.querySelectorAll(".editButton");
+console.log(editBtns);
 
 getNotes();
 
@@ -80,7 +82,7 @@ addNoteBtn.addEventListener("click",(e)=>{
         title : noteTitleBox.value,
         details : noteDetailsBox.value,
         category : categoryBtn.innerHTML=="Category" ? "General" : categoryBtn.innerHTML,
-        time : setTime() ,
+        time : `Created : ${setTime()}` ,
     }
     notesObj.push(myObj);
     localStorage.setItem("notes" , JSON.stringify(notesObj));
@@ -116,11 +118,11 @@ function getNotes(){
             bodyText.appendChild(Details);
             let editBtn = document.createElement("button");
             editBtn.type="button";
-            editBtn.className="btn btn-primary";
+            editBtn.className="btn btn-primary editButton";
             editBtn.innerHTML="Edit";
             let deleteBtn = document.createElement("button");
             deleteBtn.type="button";
-            deleteBtn.className="btn btn-danger ms-1";
+            deleteBtn.className="btn btn-danger deleteButton ms-1";
             deleteBtn.innerHTML="Delete";
             body.appendChild(bodyText);
             body.appendChild(editBtn);
@@ -151,3 +153,13 @@ function setTime(){
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     return `${time.getDate()} ${monthNames[time.getMonth()]} ${time.getFullYear()}  ${time.getHours()<10 ? `0${time.getHours()}` : time.getHours()}:${time.getMinutes()<10 ? `0${time.getMinutes()}` : time.getMinutes()}`;
 }
+
+//Delete function
+function deleteNote(index){
+    let notes = localStorage.getItem("notes");
+    notesObj = JSON.parse(notes);
+    notesObj.splice(index,1);
+    localStorage.setItem("notes",JSON.stringify(notesObj));
+    getNotes();
+}
+
