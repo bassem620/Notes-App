@@ -111,12 +111,18 @@ function getNotes(){
             body.appendChild(deleteBtn);
             // Footer
             let footer = document.createElement("div");
-            footer.className="card-footer text-muted d-flex justify-content-between";
+            footer.className="card-footer text-muted d-flex flex-column flex-sm-row justify-content-between";
             let timeSpan = document.createElement("span");
             timeSpan.innerHTML = notesObj[i].time;
             let categorySpan = document.createElement("span");
             categorySpan.innerHTML=`Category : ${notesObj[i].category}`;
             footer.appendChild(timeSpan);
+            if(notesObj[i].updated !== undefined){
+                let updatedSpan = document.createElement("span");
+                updatedSpan.innerHTML = notesObj[i].updated;
+                footer.appendChild(updatedSpan);
+                timeSpan.className="d-none d-sm-inline";
+            }
             footer.appendChild(categorySpan);
             // Card
             let card = document.createElement("div");
@@ -169,6 +175,7 @@ function editSave(index){
     notesObj = JSON.parse(notes);
     notesObj[index].title = noteEditTitleBox.value;
     notesObj[index].details = noteEditDetailsBox.value;
+    notesObj[index].updated = `Updated : ${setTime()}`;
     localStorage.setItem("notes",JSON.stringify(notesObj));
     getNotes();
 }
