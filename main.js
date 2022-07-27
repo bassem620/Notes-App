@@ -218,11 +218,18 @@ function setTime(){
 function categoryNameCreateElement(name){
     let a = document.createElement("a");
     a.className="dropdown-item category";
-    if(name !== "Archived"){
-        a.innerHTML = `<i class="bi bi-bookmark pe-2"></i>${name}`
+    if(name === "Archived"){
+        a.innerHTML = `<i class="bi bi-archive pe-2"></i>${name}`
+    }
+    else if(name === "Remove Category"){
+        a.className="dropdown-item btn";
+        a.setAttribute("data-bs-toggle","modal");
+        a.setAttribute("data-bs-target","#removeCategory");
+        a.id="removeCategoryMainBtn"
+        a.innerHTML = `<i class="bi bi-dash-circle pe-2 text-danger"></i>${name}`
     }
     else{
-        a.innerHTML = `<i class="bi bi-archive pe-2"></i>${name}`
+        a.innerHTML = `<i class="bi bi-bookmark pe-2"></i>${name}`
     }
     let li = document.createElement("li");
     li.appendChild(a);
@@ -247,10 +254,11 @@ function categoriesNames(){
     a.role = "button";
     a.setAttribute("data-bs-toggle","modal");
     a.setAttribute("data-bs-target","#newCategory");
-    a.innerHTML = `<i class="bi bi-plus-circle pe-2"></i>Add New Category`;
+    a.innerHTML = `<i class="bi bi-plus-circle pe-2 text-primary"></i>Add New Category`;
     li.append(a);
     categoriesContainer.append(hr);
     categoriesContainer.appendChild(categoryNameCreateElement('Archived'));
+    categoriesContainer.appendChild(categoryNameCreateElement(`Remove Category`));
     categoriesContainer.append(li);
 }
 categoriesNames();
@@ -273,6 +281,7 @@ addCategoryBtn.onclick = function (){
         }
         newCategoryNameBox.value="";
     }
+    document.location.reload();
     categoriesNames();
 }
 
@@ -293,3 +302,40 @@ allCategoriesView.forEach((categ)=>{
         categoryViewBtn.innerHTML = categ.innerHTML;
     });
 });
+
+//Remove Category
+let removeCategory = document.getElementById("removeCategoryMainBtn"); //main
+let removeCategoryBtn = document.getElementById("removeCategoryBtn");
+let removeCategoryBox = document.getElementById("removeCategoryBox");
+let savedCategories = document.getElementById("savedCategories");
+let categoryNumberLabel = document.getElementById("categoryNumberLabel");
+
+
+removeCategory.addEventListener("click",() =>{
+    savedCategories.innerHTML="";
+    let catNames = localStorage.getItem("notes_categories");
+    if(catNames === null){
+        savedCategories.innerHTML=`<i class="bi bi-bookmark-x pe-2"></i>No Categories Found`;
+    }
+    else{
+        let catObj = JSON.parse(catNames);
+        for(let i=0 ; i<catObj.length ; i++){
+            let li = document.createElement("li");
+            let liText = document.createTextNode(`${i+1} -> ${catObj[i]}`);
+            li.appendChild(liText);
+            savedCategories.appendChild(li);
+        }
+        removeCategoryBtn.addEventListener("click",() =>{
+            if((removeCategoryBox.value <= 0) || (removeCategoryBox.value > catObj.length) || (removeCategoryBox.value == '')){
+                removeCategoryBox.value="";
+                categoryNumberLabel.innerHTML="Please Enter A Valid Number.";
+            }
+            else{
+                catObj.splice(((removeCategoryBox.value)-1),1);
+                categoriesNames();
+                localStorage.setItem("notes_categories",JSON.stringify(catObj));
+                window.location.reload();
+            }
+        })
+    }
+})
