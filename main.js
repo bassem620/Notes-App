@@ -78,14 +78,14 @@ function getNotes(){
     // Get notes from localstorage
     let notes = localStorage.getItem("notes");
     if(notes == null){
-        notesContainer.innerHTML='No Notes Found';
+        notesContainer.innerHTML=`No Notes Found<i class="bi bi-journal-x ps-2"></i>`;
         notesContainer.className="lext-lead text-muted text-center m-5 fs-5 fw-bold";
     }
     else{
         notesContainer.className="notes-boxes container";
         notesObj = JSON.parse(notes);
         if(notesObj.length==0){
-            notesContainer.innerHTML='No Notes Found';
+            notesContainer.innerHTML=`No Notes Found<i class="bi bi-journal-x ps-2"></i>`;
             notesContainer.className="lext-lead text-muted text-center m-5 fs-5 fw-bold";
         }
         for(let i=0 ; i<notesObj.length; i++){
@@ -224,10 +224,10 @@ function categoriesNames(){
     a.role = "button";
     a.setAttribute("data-bs-toggle","modal");
     a.setAttribute("data-bs-target","#newCategory");
-    a.innerHTML = "+ Add New Category";
+    a.innerHTML = `<i class="bi bi-plus-circle pe-2"></i>Add New Category`;
     li.append(a);
     categoriesContainer.append(hr);
-    categoriesContainer.appendChild(categoryNameCreateElement("Archived"));
+    categoriesContainer.appendChild(categoryNameCreateElement(`<i class="bi bi-archive pe-2"></i>Archived`));
     categoriesContainer.append(li);
 }
 categoriesNames();
@@ -235,7 +235,7 @@ categoriesNames();
 function categoryNameCreateElement(name){
     let a = document.createElement("a");
     a.className="dropdown-item category";
-    a.innerHTML = name
+    a.innerHTML = `<i class="bi bi-bookmark pe-2"></i>${name}`
     let li = document.createElement("li");
     li.appendChild(a);
     return li ;
