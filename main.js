@@ -277,12 +277,15 @@ addCategoryBtn.onclick = function (){
             if(!cats.includes(newCategoryNameBox.value)){
                 cats.push(newCategoryNameBox.value);
                 localStorage.setItem("notes_categories",JSON.stringify(cats));
+                document.location.reload(); 
+            }
+            else{
+                let newCategoryLabel = document.getElementById("newCategoryLabel");
+                newCategoryLabel.innerHTML="Already exist.. Please enter a new category name."
+                newCategoryNameBox.value="";
             }
         }
-        newCategoryNameBox.value="";
     }
-    document.location.reload();
-    categoriesNames();
 }
 
 //category Selection
