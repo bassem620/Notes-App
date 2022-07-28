@@ -59,10 +59,10 @@ addNoteBtn.addEventListener("click",()=>{
         let myObj = {
             title : noteTitleBox.value,
             details : noteDetailsBox.value,
-            category : categoryBtn.innerHTML=="Category" ? "General" : categoryBtn.innerHTML,
+            category : categoryBtn.innerHTML=="Category" ? `<i class="bi bi-bookmark pe-2"></i>General` : categoryBtn.innerHTML,
             time : `Created : ${setTime()}` ,
             updated : null,
-            archived : false,
+            archived : categoryBtn.innerHTML==`<i class=\"bi bi-archive pe-2\"></i>Archived`? true : false,
         }
         notesObj.push(myObj);
         localStorage.setItem("notes" , JSON.stringify(notesObj));
