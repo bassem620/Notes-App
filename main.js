@@ -9,14 +9,13 @@ let categoryBtn = document.getElementById("categoryBtn");
 let categoriesContainer = document.querySelector(".add-area .categories");
 let addCategoryBtn = document.getElementById("addCategoryBtn");
 let categoryViewBtn = document.getElementById("categoryViewBtn");
-let categoriesView = document.querySelector(".notes-area .categoriesView");
 let newCategoryNameBox = document.getElementById("newCategoryName");
 let addNoteBtn = document.getElementById("addNoteBtn");
 let notesContainer = document.querySelector(".notes-boxes");
 let noteEditTitleBox = document.getElementById("noteEditTitleBox");
 let noteEditDetailsBox = document.getElementById("noteEditDetailsBox");
-
-let currentCategory = "Archived";
+// Global Variable
+let currentCategory = "All";
 
 getNotes(currentCategory);
 
@@ -135,13 +134,13 @@ function createNoteBox(notesObj,i){
     deleteBtn.setAttribute("data-bs-toggle","modal");
     deleteBtn.setAttribute("data-bs-target","#deleteConf");
     deleteBtn.innerHTML=`<i class="bi bi-trash3-fill pe-1"></i>Delete`;
-    let archiveBtn = document.createElement("button");
-    archiveBtn.className = "btn btn-secondary archiveBtn ms-1";
-    archiveBtn.innerHTML = notesObj[i].archived ? `Archive` : `Unarchive`;
+    // let archiveBtn = document.createElement("button");
+    // archiveBtn.className = "btn btn-secondary archiveBtn ms-1";
+    // archiveBtn.innerHTML = notesObj[i].archived ? `Archive` : `Unarchive`;
     body.appendChild(bodyText);
     body.appendChild(editBtn);
     body.appendChild(deleteBtn);
-    body.appendChild(archiveBtn);
+    // body.appendChild(archiveBtn);
     // Footer
     let footer = document.createElement("div");
     footer.className="card-footer text-muted d-flex flex-column flex-sm-row justify-content-between";
@@ -196,16 +195,16 @@ function createNoteButtons(){
             })
         }
     );
-    // Archive Button
-    let archivebtns = document.querySelectorAll(".archiveBtn");
-    let archivebtnsArray = Array.from(archivebtns);
-    archivebtnsArray.forEach((ele,ind) => {
-        ele.addEventListener("click",()=>{
-            notesObj[ind].archived ? notesObj[ind].archived= false : notesObj[ind].archived = true;
-            localStorage.setItem("notes",JSON.stringify(notesObj));
-            getNotes(currentCategory);
-        })
-    });
+    // // Archive Button
+    // let archivebtns = document.querySelectorAll(".archiveBtn");
+    // let archivebtnsArray = Array.from(archivebtns);
+    // archivebtnsArray.forEach((ele,ind) => {
+    //     ele.addEventListener("click",()=>{
+    //         notesObj[ind].archived ? notesObj[ind].archived= false : notesObj[ind].archived = true;
+    //         localStorage.setItem("notes",JSON.stringify(notesObj));
+    //         getNotes(currentCategory);
+    //     })
+    // });
 }
 
 // Edit save function
@@ -276,8 +275,8 @@ function categoriesNames(){
     a.innerHTML = `<i class="bi bi-plus-circle pe-2 text-primary"></i>Add New Category`;
     li.append(a);
     categoriesContainer.append(hr);
-    categoriesContainer.appendChild(categoryNameCreateElement('Archived'));
-    categoriesContainer.appendChild(categoryNameCreateElement(`Remove Category`));
+    // categoriesContainer.appendChild(categoryNameCreateElement('Archived'));
+    categoriesContainer.appendChild(categoryNameCreateElement(`<i class="bi bi-dash-circle pe-2 text-danger"></i>Remove Category`));
     categoriesContainer.append(li);
 }
 categoriesNames();
@@ -315,15 +314,40 @@ allCategories.forEach((categ)=>{
         categoryBtn.innerHTML = categ.innerHTML;
     });
 });
-
 //Category View Selection
-let categoryView = document.querySelectorAll(".notes-area .categoryView");
-let allCategoriesView = Array.from(categoryView);
-allCategoriesView.forEach((categ)=>{
-    categ.addEventListener("click",()=>{
-        categoryViewBtn.innerHTML = categ.innerHTML;
-    });
-});
+// let categoriesViewContainer = document.querySelector(".notes-area .categoriesView");
+// categoriesView();
+// function categoriesView(){
+//     categoriesViewContainer.innerHTML="";
+//     categoriesViewContainer.innerHTML=`<li><a class="dropdown-item categoryView">All</a></li>`;
+//     categoriesViewContainer.innerHTML+=`<li><a class="dropdown-item categoryView">General</a></li>`;
+//     let catNames = localStorage.getItem("notes_categories");
+//     if(catNames === null){
+//         categoriesViewContainer;
+//     }
+//     else{
+//         let catObj = JSON.parse(catNames);
+//         for(let i=0 ; i<catObj.length ; i++){
+//             let li = document.createElement("li");
+//             let a = document.createElement("a");
+//             a.className="dropdown-item categoryView";
+//             a.innerHTML=catObj[i];
+//             li.appendChild(a);
+//             categoriesViewContainer.appendChild(li);
+//         }
+//     }
+//     categoriesViewContainer.innerHTML += `<li><a class="dropdown-item categoryView">Archived</a></li>`;
+// }
+// let categoryView = document.querySelectorAll(".notes-area .categoryView");
+// let allCategoriesView = Array.from(categoryView);
+// allCategoriesView.forEach((categ)=>{
+//     categ.addEventListener("click",()=>{
+//         categoryViewBtn.innerHTML = categ.innerHTML;
+//         currentCategory = categ.innerHTML;
+//         getNotes(currentCategory);
+//         console.log(currentCategory);
+//     });
+// });
 
 //Remove Category
 let removeCategory = document.getElementById("removeCategoryMainBtn"); //main
@@ -331,7 +355,6 @@ let removeCategoryBtn = document.getElementById("removeCategoryBtn");
 let removeCategoryBox = document.getElementById("removeCategoryBox");
 let savedCategories = document.getElementById("savedCategories");
 let categoryNumberLabel = document.getElementById("categoryNumberLabel");
-
 
 removeCategory.addEventListener("click",() =>{
     savedCategories.innerHTML="";
