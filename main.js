@@ -16,7 +16,9 @@ let notesContainer = document.querySelector(".notes-boxes");
 let noteEditTitleBox = document.getElementById("noteEditTitleBox");
 let noteEditDetailsBox = document.getElementById("noteEditDetailsBox");
 
-getNotes();
+let currentCategory = "Archived";
+
+getNotes(currentCategory);
 
 //Add Note Button 
 showAddNoteBtn.onclick = function(){
@@ -62,131 +64,148 @@ addNoteBtn.addEventListener("click",()=>{
             category : categoryBtn.innerHTML=="Category" ? `<i class="bi bi-bookmark pe-2"></i>General` : categoryBtn.innerHTML,
             time : `Created : ${setTime()}` ,
             updated : null,
-            archived : categoryBtn.innerHTML==`<i class=\"bi bi-archive pe-2\"></i>Archived`? true : false,
+            archived : categoryBtn.innerHTML==`Archived`? true : false,
         }
         notesObj.push(myObj);
         localStorage.setItem("notes" , JSON.stringify(notesObj));
         resetBtn.click();
-        getNotes();
+        getNotes(currentCategory);
     }
 })
 
 
 // Notes Show
-function getNotes(){
+function getNotes(category){
     notesContainer.innerHTML='';
-    // Get notes from localstorage
     let notes = localStorage.getItem("notes");
-    if(notes == null){
+    if(notes === null){
         notesContainer.innerHTML=`No Notes Found<i class="bi bi-journal-x ps-2"></i>`;
         notesContainer.className="lext-lead text-muted text-center m-5 fs-5 fw-bold";
     }
     else{
-        notesContainer.className="notes-boxes container";
-        notesObj = JSON.parse(notes);
-        if(notesObj.length==0){
-            notesContainer.innerHTML=`No Notes Found<i class="bi bi-journal-x ps-2"></i>`;
-            notesContainer.className="lext-lead text-muted text-center m-5 fs-5 fw-bold";
-        }
-        for(let i=0 ; i<notesObj.length; i++){
-            // Header
-            let header = document.createElement("div");
-            header.className="card-header fw-bold fs-5";
-            let headerText = document.createTextNode(`Note ${i+1} : ${notesObj[i].title}`);
-            header.appendChild(headerText);
-            // Body
-            let body = document.createElement("div");
-            body.className="card-body";
-            let bodyText = document.createElement("p");
-            bodyText.className="card-text fs-5";
-            let Details = document.createTextNode(notesObj[i].details);
-            bodyText.appendChild(Details);
-            let editBtn = document.createElement("button");
-            editBtn.type="button";
-            editBtn.className="btn btn-primary editButton";
-            editBtn.innerHTML=`<i class="bi bi-pencil-square pe-1"></i>Edit`;
-            editBtn.setAttribute("data-bs-toggle","modal");
-            editBtn.setAttribute("data-bs-target","#editModal");
-            let deleteBtn = document.createElement("button");
-            deleteBtn.type="button";
-            deleteBtn.className="btn btn-danger deleteButton ms-1";
-            deleteBtn.setAttribute("data-bs-toggle","modal");
-            deleteBtn.setAttribute("data-bs-target","#deleteConf");
-            deleteBtn.innerHTML=`<i class="bi bi-trash3-fill pe-1"></i>Delete`;
-            let archiveBtn = document.createElement("button");
-            archiveBtn.className = "btn btn-secondary archiveBtn ms-1";
-            archiveBtn.innerHTML = notesObj[i].archived ? `<i class="bi bi-archive-fill pe-1"></i>Archive` : `<i class="bi bi-archive-fill pe-1"></i>Unarchive`;
-            body.appendChild(bodyText);
-            body.appendChild(editBtn);
-            body.appendChild(deleteBtn);
-            body.appendChild(archiveBtn);
-            // Footer
-            let footer = document.createElement("div");
-            footer.className="card-footer text-muted d-flex flex-column flex-sm-row justify-content-between";
-            let timeSpan = document.createElement("span");
-            timeSpan.innerHTML = notesObj[i].time;
-            let categorySpan = document.createElement("span");
-            categorySpan.innerHTML=`Category : ${notesObj[i].category}`;
-            footer.appendChild(timeSpan);
-            if(notesObj[i].updated !== null){
-                let updatedSpan = document.createElement("span");
-                updatedSpan.innerHTML = notesObj[i].updated;
-                footer.appendChild(updatedSpan);
-                timeSpan.className="d-none d-sm-inline";
-            }
-            footer.appendChild(categorySpan);
-            // Card
-            let card = document.createElement("div");
-            card.className="card text-start mb-3";
-            card.appendChild(header);
-            card.appendChild(body);
-            card.appendChild(footer);
-            notesContainer.appendChild(card);
-        }
-        //Delete Button
-        let deleteBtns = document.querySelectorAll(".deleteButton");
-        let deleteBtnsArray = Array.from(deleteBtns);
-        let deleteConfirmed = document.getElementById("deleteConfirmed");
-        deleteBtnsArray.forEach((ele,index)=>{
-            ele.addEventListener("click",()=>{
-                deleteConfirmed.onclick = function () {
-                    let notes = localStorage.getItem("notes");
-                    notesObj = JSON.parse(notes);
-                    notesObj.splice(index,1);
-                    localStorage.setItem("notes",JSON.stringify(notesObj));
-                    getNotes();
-                }
-                }
-        )});
-        // Edit Button
-        let editBtns = document.querySelectorAll(".editButton");
-        let editSaveBtn = document.getElementById("editSaveBtn");
-        let editBtnsArray = Array.from(editBtns);
-        editBtnsArray.forEach((ele,ind) => {
-                ele.addEventListener("click",() => {
-                    noteEditTitleBox.value = notesObj[ind].title;
-                    noteEditDetailsBox.value = notesObj[ind].details;
-                    editSaveBtn.addEventListener("click",()=>{
-                    editSave(ind);
-                    })
-                })
-            }
-        );
-        // Archive Button
-        let archivebtns = document.querySelectorAll(".archiveBtn");
-        let archivebtnsArray = Array.from(archivebtns);
-        archivebtnsArray.forEach((ele,ind) => {
-            ele.addEventListener("click",()=>{
-                notesObj[ind].archived ? notesObj[ind].archived= false : notesObj[ind].archived = true;
-                localStorage.setItem("notes",JSON.stringify(notesObj));
-                getNotes();
-            })
-        });
+        createNote(category,notes);
     }
     if(notesContainer.innerHTML==`No Notes Found<i class="bi bi-journal-x ps-2"></i>`){
         addArea.classList.remove("d-none");
         addArea.classList.add("d-block");
     }
+}
+
+function createNote(category,notes){
+    notesContainer.className="notes-boxes container";
+    notesObj = JSON.parse(notes);
+    if(notesObj.length==0){
+        notesContainer.innerHTML=`No Notes Found<i class="bi bi-journal-x ps-2"></i>`;
+        notesContainer.className="lext-lead text-muted text-center m-5 fs-5 fw-bold";
+    }
+    //Looping on notes data
+    for(let i=0 ; i<notesObj.length; i++){
+        if(notesObj[i].category == category){
+            createNoteBox(notesObj,i);
+        }
+        else if((category == "All") && (!notesObj[i].archived)){
+            createNoteBox(notesObj,i)
+        }
+        createNoteButtons();
+    }
+}
+
+function createNoteBox(notesObj,i){
+    // Header
+    let header = document.createElement("div");
+    header.className="card-header fw-bold fs-5";
+    let headerText = document.createTextNode(`Note ${i+1} : ${notesObj[i].title}`);
+    header.appendChild(headerText);
+    // Body
+    let body = document.createElement("div");
+    body.className="card-body";
+    let bodyText = document.createElement("p");
+    bodyText.className="card-text fs-5";
+    let Details = document.createTextNode(notesObj[i].details);
+    bodyText.appendChild(Details);
+    let editBtn = document.createElement("button");
+    editBtn.type="button";
+    editBtn.className="btn btn-primary editButton";
+    editBtn.innerHTML=`<i class="bi bi-pencil-square pe-1"></i>Edit`;
+    editBtn.setAttribute("data-bs-toggle","modal");
+    editBtn.setAttribute("data-bs-target","#editModal");
+    let deleteBtn = document.createElement("button");
+    deleteBtn.type="button";
+    deleteBtn.className="btn btn-danger deleteButton ms-1";
+    deleteBtn.setAttribute("data-bs-toggle","modal");
+    deleteBtn.setAttribute("data-bs-target","#deleteConf");
+    deleteBtn.innerHTML=`<i class="bi bi-trash3-fill pe-1"></i>Delete`;
+    let archiveBtn = document.createElement("button");
+    archiveBtn.className = "btn btn-secondary archiveBtn ms-1";
+    archiveBtn.innerHTML = notesObj[i].archived ? `Archive` : `Unarchive`;
+    body.appendChild(bodyText);
+    body.appendChild(editBtn);
+    body.appendChild(deleteBtn);
+    body.appendChild(archiveBtn);
+    // Footer
+    let footer = document.createElement("div");
+    footer.className="card-footer text-muted d-flex flex-column flex-sm-row justify-content-between";
+    let timeSpan = document.createElement("span");
+    timeSpan.innerHTML = notesObj[i].time;
+    let categorySpan = document.createElement("span");
+    categorySpan.innerHTML=`Category : ${notesObj[i].category}`;
+    footer.appendChild(timeSpan);
+    if(notesObj[i].updated !== null){
+        let updatedSpan = document.createElement("span");
+        updatedSpan.innerHTML = notesObj[i].updated;
+        footer.appendChild(updatedSpan);
+        timeSpan.className="d-none d-sm-inline";
+    }
+    footer.appendChild(categorySpan);
+    // Card
+    let card = document.createElement("div");
+    card.className="card text-start mb-3";
+    card.appendChild(header);
+    card.appendChild(body);
+    card.appendChild(footer);
+    notesContainer.appendChild(card);
+}
+
+function createNoteButtons(){
+    //Delete Button
+    let deleteBtns = document.querySelectorAll(".deleteButton");
+    let deleteBtnsArray = Array.from(deleteBtns);
+    let deleteConfirmed = document.getElementById("deleteConfirmed");
+    deleteBtnsArray.forEach((ele,index)=>{
+        ele.addEventListener("click",()=>{
+            deleteConfirmed.onclick = function () {
+                let notes = localStorage.getItem("notes");
+                notesObj = JSON.parse(notes);
+                notesObj.splice(index,1);
+                localStorage.setItem("notes",JSON.stringify(notesObj));
+                getNotes(currentCategory);
+            }
+            }
+    )});
+    // Edit Button
+    let editBtns = document.querySelectorAll(".editButton");
+    let editSaveBtn = document.getElementById("editSaveBtn");
+    let editBtnsArray = Array.from(editBtns);
+    editBtnsArray.forEach((ele,ind) => {
+            ele.addEventListener("click",() => {
+                noteEditTitleBox.value = notesObj[ind].title;
+                noteEditDetailsBox.value = notesObj[ind].details;
+                editSaveBtn.addEventListener("click",()=>{
+                editSave(ind);
+                })
+            })
+        }
+    );
+    // Archive Button
+    let archivebtns = document.querySelectorAll(".archiveBtn");
+    let archivebtnsArray = Array.from(archivebtns);
+    archivebtnsArray.forEach((ele,ind) => {
+        ele.addEventListener("click",()=>{
+            notesObj[ind].archived ? notesObj[ind].archived= false : notesObj[ind].archived = true;
+            localStorage.setItem("notes",JSON.stringify(notesObj));
+            getNotes(currentCategory);
+        })
+    });
 }
 
 // Edit save function
@@ -203,7 +222,7 @@ function editSave(index){
         notesObj[index].details = noteEditDetailsBox.value;
         notesObj[index].updated = `Updated : ${setTime()}`;
         localStorage.setItem("notes",JSON.stringify(notesObj));
-        getNotes();
+        getNotes(currentCategory);
     }
 }
 
@@ -219,17 +238,17 @@ function categoryNameCreateElement(name){
     let a = document.createElement("a");
     a.className="dropdown-item category";
     if(name === "Archived"){
-        a.innerHTML = `<i class="bi bi-archive pe-2"></i>${name}`
+        a.innerHTML = `${name}`
     }
     else if(name === "Remove Category"){
         a.className="dropdown-item btn";
         a.setAttribute("data-bs-toggle","modal");
         a.setAttribute("data-bs-target","#removeCategory");
         a.id="removeCategoryMainBtn"
-        a.innerHTML = `<i class="bi bi-dash-circle pe-2 text-danger"></i>${name}`
+        a.innerHTML = `${name}`
     }
     else{
-        a.innerHTML = `<i class="bi bi-bookmark pe-2"></i>${name}`
+        a.innerHTML = `${name}`
     }
     let li = document.createElement("li");
     li.appendChild(a);
