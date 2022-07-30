@@ -16,6 +16,7 @@ let noteEditTitleBox = document.getElementById("noteEditTitleBox");
 let noteEditDetailsBox = document.getElementById("noteEditDetailsBox");
 // Global Variable
 let currentCategory = "All";
+let notesCount = 0;
 
 getNotes(currentCategory);
 
@@ -77,6 +78,7 @@ addNoteBtn.addEventListener("click",()=>{
 // Notes Show
 function getNotes(category){
     notesContainer.innerHTML='';
+    notesCount = 0;
     let notes = localStorage.getItem("notes");
     if(notes === null){
         notesContainer.innerHTML=`No Notes Found<i class="bi bi-journal-x ps-2"></i>`;
@@ -106,10 +108,18 @@ function createNote(category,notes){
 }
 
 function createNoteBox(notesObj,i,category){
+    // Card
+    let card = document.createElement("div");
+    if((notesObj[i].category==category) || ((category == "All") && (notesObj[i].archived == false))){
+        card.className="card text-start mb-3 shadow";
+    }
+    else{
+        card.className="card text-start mb-3 shadow d-none";
+    }
     // Header
     let header = document.createElement("div");
     header.className="card-header fw-bold fs-5";
-    let headerText = document.createTextNode(`Note ${i+1} : ${notesObj[i].title}`);
+    let headerText = document.createTextNode(`Note ${card.classList.contains("d-none")? '' : ++notesCount} : ${notesObj[i].title}`);
     header.appendChild(headerText);
     // Body
     let body = document.createElement("div");
@@ -152,14 +162,6 @@ function createNoteBox(notesObj,i,category){
         timeSpan.className="d-none d-sm-inline";
     }
     footer.appendChild(categorySpan);
-    // Card
-    let card = document.createElement("div");
-    if((notesObj[i].category==category) || ((category == "All") && (notesObj[i].archived == false))){
-        card.className="card text-start mb-3 shadow";
-    }
-    else{
-        card.className="card text-start mb-3 shadow d-none";
-    }
     card.appendChild(header);
     card.appendChild(body);
     card.appendChild(footer);
