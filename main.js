@@ -61,8 +61,8 @@ addNoteBtn.addEventListener("click",()=>{
         let myObj = {
             title : noteTitleBox.value,
             details : noteDetailsBox.value,
-            category : categoryBtn.innerHTML=="Category" ? `<i class="bi bi-bookmark pe-2"></i>General` : categoryBtn.innerHTML,
-            mainCategory : categoryBtn.innerHTML=="Category" ? `<i class="bi bi-bookmark pe-2"></i>General` : categoryBtn.innerHTML,
+            category : categoryBtn.innerHTML=="Category" ? `General` : categoryBtn.innerHTML,
+            mainCategory : categoryBtn.innerHTML=="Category" ? `General` : categoryBtn.innerHTML,
             time : `Created : ${setTime()}` ,
             updated : null,
             archived : categoryBtn.innerHTML==`Archived`? true : false,
