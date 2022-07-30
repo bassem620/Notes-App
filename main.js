@@ -337,7 +337,7 @@ function categoriesView(){
     categoriesViewContainer.innerHTML+=`<li><a class="dropdown-item categoryView">General</a></li>`;
     let catNames = localStorage.getItem("notes_categories");
     if(catNames === null){
-        categoriesViewContainer;
+        console.log("No added categories");
     }
     else{
         let catObj = JSON.parse(catNames);
