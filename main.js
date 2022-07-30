@@ -61,6 +61,7 @@ addNoteBtn.addEventListener("click",()=>{
             title : noteTitleBox.value,
             details : noteDetailsBox.value,
             category : categoryBtn.innerHTML=="Category" ? `<i class="bi bi-bookmark pe-2"></i>General` : categoryBtn.innerHTML,
+            mainCategory : categoryBtn.innerHTML=="Category" ? `<i class="bi bi-bookmark pe-2"></i>General` : categoryBtn.innerHTML,
             time : `Created : ${setTime()}` ,
             updated : null,
             archived : categoryBtn.innerHTML==`Archived`? true : false,
@@ -99,17 +100,12 @@ function createNote(category,notes){
     }
     //Looping on notes data
     for(let i=0 ; i<notesObj.length; i++){
-        if(notesObj[i].category == category){
-            createNoteBox(notesObj,i);
-        }
-        else if((category == "All") && (!notesObj[i].archived)){
-            createNoteBox(notesObj,i)
-        }
-        createNoteButtons();
+        createNoteBox(notesObj,i,category);
     }
+    createNoteButtons();
 }
 
-function createNoteBox(notesObj,i){
+function createNoteBox(notesObj,i,category){
     // Header
     let header = document.createElement("div");
     header.className="card-header fw-bold fs-5";
@@ -134,13 +130,13 @@ function createNoteBox(notesObj,i){
     deleteBtn.setAttribute("data-bs-toggle","modal");
     deleteBtn.setAttribute("data-bs-target","#deleteConf");
     deleteBtn.innerHTML=`<i class="bi bi-trash3-fill pe-1"></i>Delete`;
-    // let archiveBtn = document.createElement("button");
-    // archiveBtn.className = "btn btn-secondary archiveBtn ms-1";
-    // archiveBtn.innerHTML = notesObj[i].archived ? `Archive` : `Unarchive`;
+    let archiveBtn = document.createElement("button");
+    archiveBtn.className = "btn btn-secondary archiveBtn ms-1";
+    archiveBtn.innerHTML = notesObj[i].archived ? `Unarchive` : `Archive`;
     body.appendChild(bodyText);
     body.appendChild(editBtn);
     body.appendChild(deleteBtn);
-    // body.appendChild(archiveBtn);
+    body.appendChild(archiveBtn);
     // Footer
     let footer = document.createElement("div");
     footer.className="card-footer text-muted d-flex flex-column flex-sm-row justify-content-between";
@@ -158,7 +154,12 @@ function createNoteBox(notesObj,i){
     footer.appendChild(categorySpan);
     // Card
     let card = document.createElement("div");
-    card.className="card text-start mb-3 shadow";
+    if((notesObj[i].category==category) || ((category == "All") && (notesObj[i].archived == false))){
+        card.className="card text-start mb-3 shadow";
+    }
+    else{
+        card.className="card text-start mb-3 shadow d-none";
+    }
     card.appendChild(header);
     card.appendChild(body);
     card.appendChild(footer);
@@ -195,16 +196,25 @@ function createNoteButtons(){
             })
         }
     );
-    // // Archive Button
-    // let archivebtns = document.querySelectorAll(".archiveBtn");
-    // let archivebtnsArray = Array.from(archivebtns);
-    // archivebtnsArray.forEach((ele,ind) => {
-    //     ele.addEventListener("click",()=>{
-    //         notesObj[ind].archived ? notesObj[ind].archived= false : notesObj[ind].archived = true;
-    //         localStorage.setItem("notes",JSON.stringify(notesObj));
-    //         getNotes(currentCategory);
-    //     })
-    // });
+    // Archive Button
+    let archivebtns = document.querySelectorAll(".archiveBtn");
+    let archivebtnsArray = Array.from(archivebtns);
+    archivebtnsArray.forEach((ele,ind) => {
+        ele.addEventListener("click",()=>{
+            if(notesObj[ind].archived){
+                notesObj[ind].archived = false;
+                notesObj[ind].category = notesObj[ind].mainCategory == "Archived" ? "General" : notesObj[ind].mainCategory;
+                ele.innerHTML='Archive';
+            }
+            else{
+                notesObj[ind].archived= true;
+                notesObj[ind].category = "Archived";
+                ele.innerHTML='Unarchive';
+            }
+            localStorage.setItem("notes",JSON.stringify(notesObj));
+            getNotes(currentCategory);
+        })
+    });
 }
 
 // Edit save function
@@ -268,7 +278,7 @@ function categoriesNames(){
     a1.innerHTML = `<i class="bi bi-plus-circle pe-2 text-primary"></i>Add New Category`;
     li1.appendChild(a1);
     categoriesContainer.appendChild(hr);
-    // categoriesContainer.appendChild(categoryNameCreateElement('Archived'));
+    categoriesContainer.appendChild(categoryNameCreateElement('Archived'));
     let li2 = document.createElement("li");
     let a2 = document.createElement("a");
     li2.innerHTML='';
@@ -291,6 +301,7 @@ addCategoryBtn.onclick = function (){
             getCats = [];
             getCats.push(newCategoryNameBox.value.toString());
             localStorage.setItem("notes_categories",JSON.stringify(getCats));
+            document.location.reload(); 
         }
         else{
             let cats = JSON.parse(getCats);
@@ -318,43 +329,43 @@ allCategories.forEach((categ)=>{
 });
 
 //Category View Selection
-// let categoriesViewContainer = document.querySelector(".notes-area .categoriesView");
+let categoriesViewContainer = document.querySelector(".notes-area .categoriesView");
 
-// function categoriesView(){
-//     categoriesViewContainer.innerHTML="";
-//     categoriesViewContainer.innerHTML=`<li><a class="dropdown-item categoryView">All</a></li>`;
-//     categoriesViewContainer.innerHTML+=`<li><a class="dropdown-item categoryView">General</a></li>`;
-//     let catNames = localStorage.getItem("notes_categories");
-//     if(catNames === null){
-//         categoriesViewContainer;
-//     }
-//     else{
-//         let catObj = JSON.parse(catNames);
-//         for(let i=0 ; i<catObj.length ; i++){
-//             let li = document.createElement("li");
-//             let a = document.createElement("a");
-//             a.className="dropdown-item categoryView";
-//             a.innerHTML=catObj[i];
-//             li.appendChild(a);
-//             categoriesViewContainer.appendChild(li);
-//         }
-//     }
-//     categoriesViewContainer.innerHTML += `<li><a class="dropdown-item categoryView">Archived</a></li>`;
-// }
-// categoriesView();
-// let categoryView = document.querySelectorAll(".notes-area .categoryView");
-// let allCategoriesView = Array.from(categoryView);
-// allCategoriesView.forEach((categ)=>{
-//     categ.addEventListener("click",()=>{
-//         categoryViewBtn.innerHTML = categ.innerHTML;
-//         currentCategory = categ.innerHTML;
-//         getNotes(currentCategory);
-//         console.log(currentCategory);
-//     });
-// });
+function categoriesView(){
+    categoriesViewContainer.innerHTML="";
+    categoriesViewContainer.innerHTML=`<li><a class="dropdown-item categoryView">All</a></li>`;
+    categoriesViewContainer.innerHTML+=`<li><a class="dropdown-item categoryView">General</a></li>`;
+    let catNames = localStorage.getItem("notes_categories");
+    if(catNames === null){
+        categoriesViewContainer;
+    }
+    else{
+        let catObj = JSON.parse(catNames);
+        for(let i=0 ; i<catObj.length ; i++){
+            let li = document.createElement("li");
+            let a = document.createElement("a");
+            a.className="dropdown-item categoryView";
+            a.innerHTML=catObj[i];
+            li.appendChild(a);
+            categoriesViewContainer.appendChild(li);
+        }
+    }
+    categoriesViewContainer.innerHTML += `<li><a class="dropdown-item categoryView">Archived</a></li>`;
+}
+categoriesView();
+let categoryView = document.querySelectorAll(".notes-area .categoryView");
+let allCategoriesView = Array.from(categoryView);
+allCategoriesView.forEach((categ)=>{
+    categ.addEventListener("click",()=>{
+        categoryViewBtn.innerHTML = categ.innerHTML;
+        currentCategory = categ.innerHTML;
+        getNotes(currentCategory);
+        console.log(currentCategory);
+    });
+});
 
 //Remove Category
-let removeCategory = document.getElementById("removeCategoryBtn"); //main
+let removeCategory = document.getElementById("removeCategoryMainBtn"); //main
 let removeCategoryBtn = document.getElementById("removeCategoryBtn");
 let removeCategoryBox = document.getElementById("removeCategoryBox");
 let savedCategories = document.getElementById("savedCategories");
@@ -381,8 +392,8 @@ removeCategory.addEventListener("click",() =>{
             }
             else{
                 catObj.splice(((removeCategoryBox.value)-1),1);
-                categoriesNames();
                 localStorage.setItem("notes_categories",JSON.stringify(catObj));
+                categoriesNames();
                 window.location.reload();
             }
         })
